@@ -7,7 +7,7 @@
 //
 
 #import "ViewController.h"
-
+#import "YYDispatchQueuePool.h"
 @interface ViewController ()
 
 @end
@@ -16,8 +16,19 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view, typically from a nib.
+  
+    YYDispatchQueuePool *pool = [[YYDispatchQueuePool alloc] initWithName:@"file.read" queueCount:5 qos:NSQualityOfServiceBackground];
+    dispatch_queue_t queue1 = [pool queue];
+    dispatch_queue_t queue2 = [pool queue];
+                               
 }
+- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
+    YYDispatchQueuePool *pool = [[YYDispatchQueuePool alloc] initWithName:@"file.read" queueCount:5 qos:NSQualityOfServiceBackground];
+    dispatch_queue_t queue1 = [pool queue];
+    dispatch_queue_t queue2 = [pool queue];
+    dispatch_queue_t queue = YYDispatchQueueGetForQOS(NSQualityOfServiceUserInteractive);
+}
+ 
 
 
 - (void)didReceiveMemoryWarning {

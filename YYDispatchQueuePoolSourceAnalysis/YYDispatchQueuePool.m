@@ -25,7 +25,7 @@ static inline dispatch_queue_priority_t NSQualityOfServiceToDispatchPriority(NSQ
         default: return DISPATCH_QUEUE_PRIORITY_DEFAULT;
     }
 }
-
+///NSQualityOfService -> qos_class_t
 static inline qos_class_t NSQualityOfServiceToQOSClass(NSQualityOfService qos) {
     switch (qos) {
         case NSQualityOfServiceUserInteractive: return QOS_CLASS_USER_INTERACTIVE;
@@ -37,16 +37,31 @@ static inline qos_class_t NSQualityOfServiceToQOSClass(NSQualityOfService qos) {
     }
 }
 
+
+/**
+ *  每一个不同NSQualityOfService 对应一个YYDispatchContext
+ */
 typedef struct {
+    //队列名字
     const char *name;
-    void **queues;//多重指针  **相当于指向指针的指针，本质还是一个指针，只是它指向的是一个地址。*&很简单，即同级运算，从右到左，先进行地址&运算再进行指针*运算。
+    //缓存队列的数组    多重指针  **相当于指向指针的指针，本质还是一个指针，只是它指向的是一个地址。*&很简单，即同级运算，从右到左，先进行地址&运算再进行指针*运算。
+    void **queues;
+    //指定缓存队列的个数
     uint32_t queueCount;
+    //被使用次数
     int32_t counter;
 } YYDispatchContext;
 
 static YYDispatchContext *YYDispatchContextCreate(const char *name,
                                                  uint32_t queueCount,
                                                  NSQualityOfService qos) {
+    //calloc函数的功能与malloc函数的功能相似，都是从堆分配内存。其函数声明如下：
+    //void *calloc(int n,int size);
+    //函数返回值为void型指针。
+    //如果执行成功，函数从堆上获得size X n的字节空间，并返回该空间的首地址。
+    //如果执行失败，函数返回NULL。
+    //该函数与malloc函数的一个显著不同时是，calloc函数得到的内存空间是经过初始化的，其内容全为0。
+    //calloc函数适合为数组申请空间，可以将size设置为数组元素的空间长度，将n设置为数组的容量
     YYDispatchContext *context = calloc(1, sizeof(YYDispatchContext));
     if (!context) return NULL;
     context->queues =  calloc(queueCount, sizeof(void *));
@@ -55,6 +70,24 @@ static YYDispatchContext *YYDispatchContextCreate(const char *name,
         return NULL;
     }
     if ([UIDevice currentDevice].systemVersion.floatValue >= 8.0) {
+        ///dispatch_qos_class_t 是 qos_class_t 的别名 而 qos_class_t 是一种枚举
+        /*
+         而 qos_class_t 是一种枚举，有以下类型：
+         
+         QOS_CLASS_USER_INTERACTIVE：user interactive 等级表示任务需要被立即执行，用来在响应事件之后更新 UI，来提供好的用户体验。这个等级最好保持小规模。
+         
+         QOS_CLASS_USER_INITIATED：user initiated 等级表示任务由 UI 发起异步执行。适用场景是需要及时结果同时又可以继续交互的时候。
+         
+         QOS_CLASS_DEFAULT：default 默认优先级
+         
+         QOS_CLASS_UTILITY：utility 等级表示需要长时间运行的任务，伴有用户可见进度指示器。经常会用来做计算，I/O，网络，持续的数据填充等任务。这个任务节能。
+         
+         QOS_CLASS_BACKGROUND：background 等级表示用户不会察觉的任务，使用它来处理预加载，或者不需要用户交互和对时间不敏感的任务。
+         
+         QOS_CLASS_UNSPECIFIED：unspecified 未指明
+         
+
+         */
         dispatch_qos_class_t qosClass = NSQualityOfServiceToQOSClass(qos);
         for (NSUInteger i = 0; i < queueCount; i++) {
             dispatch_queue_attr_t attr = dispatch_queue_attr_make_with_qos_class(DISPATCH_QUEUE_SERIAL, qosClass, 0);
@@ -94,7 +127,9 @@ static void YYDispatchContextRelease(YYDispatchContext *context) {
 }
 
 static dispatch_queue_t YYDispatchContextGetQueue(YYDispatchContext *context) {
+    ///每次使用数量加一 为了更安全地递增一个全局计数器，我们使用 OSAtomicIncrement32 来原子操作级别地增加 counter 数
     uint32_t counter = (uint32_t)OSAtomicIncrement32(&context->counter);
+    ///counter % context->queueCount 确保不越界
     void *queue = context->queues[counter % context->queueCount];
     return (__bridge dispatch_queue_t)(queue);
 }
