@@ -15,6 +15,7 @@
 		AA5FC8FE1FDB72FA00710E3A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = AA5FC8FD1FDB72FA00710E3A /* main.m */; };
 		AA5FC9081FDB72FB00710E3A /* YYDispatchQueuePoolSourceAnalysisTests.m in Sources */ = {isa = PBXBuildFile; fileRef = AA5FC9071FDB72FB00710E3A /* YYDispatchQueuePoolSourceAnalysisTests.m */; };
 		AA5FC9131FDB72FB00710E3A /* YYDispatchQueuePoolSourceAnalysisUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = AA5FC9121FDB72FB00710E3A /* YYDispatchQueuePoolSourceAnalysisUITests.m */; };
+		AA5FC9221FDB741700710E3A /* YYDispatchQueuePool.m in Sources */ = {isa = PBXBuildFile; fileRef = AA5FC9211FDB741700710E3A /* YYDispatchQueuePool.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,6 +52,8 @@
 		AA5FC90E1FDB72FB00710E3A /* YYDispatchQueuePoolSourceAnalysisUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = YYDispatchQueuePoolSourceAnalysisUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		AA5FC9121FDB72FB00710E3A /* YYDispatchQueuePoolSourceAnalysisUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = YYDispatchQueuePoolSourceAnalysisUITests.m; sourceTree = "<group>"; };
 		AA5FC9141FDB72FB00710E3A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		AA5FC9201FDB741700710E3A /* YYDispatchQueuePool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YYDispatchQueuePool.h; sourceTree = "<group>"; };
+		AA5FC9211FDB741700710E3A /* YYDispatchQueuePool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YYDispatchQueuePool.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -101,6 +104,8 @@
 		AA5FC8ED1FDB72FA00710E3A /* YYDispatchQueuePoolSourceAnalysis */ = {
 			isa = PBXGroup;
 			children = (
+				AA5FC9201FDB741700710E3A /* YYDispatchQueuePool.h */,
+				AA5FC9211FDB741700710E3A /* YYDispatchQueuePool.m */,
 				AA5FC8EE1FDB72FA00710E3A /* AppDelegate.h */,
 				AA5FC8EF1FDB72FA00710E3A /* AppDelegate.m */,
 				AA5FC8F11FDB72FA00710E3A /* ViewController.h */,
@@ -266,6 +271,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AA5FC8F31FDB72FA00710E3A /* ViewController.m in Sources */,
+				AA5FC9221FDB741700710E3A /* YYDispatchQueuePool.m in Sources */,
 				AA5FC8FE1FDB72FA00710E3A /* main.m in Sources */,
 				AA5FC8F01FDB72FA00710E3A /* AppDelegate.m in Sources */,
 			);
